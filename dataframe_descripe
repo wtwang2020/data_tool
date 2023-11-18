@@ -1,0 +1,14 @@
+any(is.na(data[x,y)
+
+
+#https://mp.weixin.qq.com/s/EnBoFrVz_JKmBM64NWilrA
+install.packages("skimr")
+library(skimr)
+skim(mydata)
+#部分变量
+skim(mydata, sex, age)
+#数字型变量
+skim(mydata, where(is.numeric))
+skim(data,colnames(data[,12]))
+
+
