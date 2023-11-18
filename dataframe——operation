@@ -1,0 +1,16 @@
+#######数据操作函数#######
+
+###########################################数据框行名变为第一列####################################
+add_rownames_as_first_column <- function(df) {
+  df$sample_id <- row.names(df)  # 添加名为 "sample_id" 的列，其值为行名
+  df <- df[, c("sample_id", names(df))]  # 调整列的顺序，将 "sample_id" 放在第一列
+  return(df)
+}
+
+# 使用示例
+your_data <- data.frame(A = c(1, 2, 3), B = c(4, 5, 6))
+rownames(your_data) <- c("row1", "row2", "row3")
+
+result <- add_rownames_as_first_column(your_data)
+print(result)
+##################################################################################################
