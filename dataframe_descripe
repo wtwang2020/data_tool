@@ -11,4 +11,5 @@ skim(mydata, sex, age)
 skim(mydata, where(is.numeric))
 skim(data,colnames(data[,12]))
 
-
+#tidyvere
+arrange(colname)排序
