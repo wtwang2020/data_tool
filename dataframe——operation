@@ -57,3 +57,11 @@ summarize(small=first(),
   medianlength=median(),
   iqrlength=IQR(length),
   ))
+#匹配
+sce$cell_type = case_when(
+  sce$RNA_snn_res.0.3 %in% c(0, 3, 7) ~ "GBM",
+  sce$RNA_snn_res.0.3 %in% c(1) ~ "myeloid",
+  sce$RNA_snn_res.0.3 %in% c(5) ~ "oligodendrocyte",
+  # sce$RNA_snn_res.0.3 %in% c() ~ "lymphoid",
+  sce$RNA_snn_res.0.3 %in% c(2, 4, 6, 8, 9 , 10, 11,12) ~ "other"
+)
