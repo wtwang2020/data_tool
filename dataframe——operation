@@ -14,3 +14,46 @@ rownames(your_data) <- c("row1", "row2", "row3")
 result <- add_rownames_as_first_column(your_data)
 print(result)
 ##################################################################################################
+                                                   tidyverse
+select(gene,everything())
+filter(gene=="")
+match("AF")匹配带有AF字符串的列名，配合上面使用
+
+separate(列名,into=c("新列","新列")，sep="_")#按照_分割
+separate(列名,into=c("新列","新列")，sep=1)#分割第一个字符
+pivot_longer(-不变的列,names_to="sample",value_to="counts")
+unite(新列,列2,列2)
+left_join()
+right_join()#右变左
+inner——join()完全匹配
+outer_join()#直接加
+
+##纵向
+intersect()#交集
+union()#合并
+setdiff()#不同合并
+
+bind_rows()#堆高
+bind_cols()#堆长
+###查找
+##列值查找
+#查找返回逻辑变量（查找值，列名）
+grel("chr1",Chr)
+##列名查找
+#政治表达式匹配
+select(gene,match(".F_"))
+
+###替换
+gsub("\\.[0-9]*$","替换成你想要的",列名)
+
+###排序
+arrange()
+arrange(desp())
+
+#总结max(),last()
+summarize(small=first(),
+  mimlength=min(),
+  firstlength=(length,0.25,
+  medianlength=median(),
+  iqrlength=IQR(length),
+  ))
