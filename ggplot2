@@ -6,13 +6,33 @@ geom_col()
 scale_x_discrete(labels = data_hist_clean$midpoints)
 
 
+##绘图
+#参数alpha,size
+geom_point()
+geom_smooth()#method=lm
 
 
 分组柱形图
 前面说过了堆积柱形图其实不太适合多数据系列的堆积，但我们又想要展示多系列要怎么办呢？解决办法就是给他不要堆积，而是水平排放，这里仅需要修改position='dodge'：
 ggplot(new_df, aes(x=type,y=value,fill=year)) + geom_col(position = 'dodge')
-
+##标签
 添加文本标签
 ggplot(new_df, aes(x=type,y=value,fill=year)) +  
  geom_col(position = position_dodge(width = 0.5),width = 0.4) +  
  geom_text(aes(label=value),position = position_dodge(width = 0.5),vjust=-0.5)
+坐标轴
+labs(title="",x="",y="")
+
+##坐标轴值
+scale_x_log10()
+scale_y_log10()
+scale_y_continuous(limits=c(0,0.5))
+
+##主题
+theme_minimal()
+
+##旋转
+coord_flip()
+
+##分页与组装
+facet_wrap
