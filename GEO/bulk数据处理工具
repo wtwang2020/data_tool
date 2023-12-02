@@ -1,0 +1,40 @@
+setwd("D:/课本/与同学的合作项目/我自己/王勇飞/王勇飞复现")
+library(GEOquery)
+library(AnnoProbe)
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(geneExpressionFromGEO)
+library(limma)
+library(survival)
+#加载区
+GSE24551 = GEOquery::getGEO(GEO = "GSE24551",destdir = ".", getGPL = T,
+                            AnnotGPL = T)
+##获得数据                           
+data3<-GSE30378[["GSE30378_series_matrix.txt.gz"]]@assayData[["exprs"]]#表达矩阵
+pdata1<-pData(GSE24551[[1]]) #临床数据
+pdata2<-pData(GSE24551[[2]]) 
+gpl <- getGEO("GPL5175", destdir=".")#平台数据
+#数据合并
+##基因注释
+gene_annotation <- Table(gpl)[,c(1,11)]
+gene_annotation$gene=str_split(gene_annotation$mrna_assignment,'//',simplify = T)[,3]
+pattern <- ".*\\((?<ID>[A-Za-z0-9]*)\\),.*"
+res <- stringr::str_match(string = gene_annotation$gene, pattern = pattern)
+geneID <- res[,2]
+head(geneID)
+gene_annotation$gene=geneID
+ids=gene_annotation[,-2]
+length(unique(gene_annotation$gene))
+tail(sort(table(ids$gene)))
+plot(table(sort(table(ids$gene))))
+table(rownames(exprSet) %in% ids$ID)
+###基因注释之取均值
+exprSet <- exprSet %>%
+  group_by(gene) %>%
+  summarise_all(mean,na.rm = TRUE)
+##风险分层
+exprSet_TRIM72$TRIM72_risk <- ifelse(exprSet_TRIM72$TRIM72 > median_value, "高风险", "低风险")
+##生存分析
+sfit <- survfit(Surv(time, event)~TRIM72_risk, data=exprSet_TRIM72)
+ggsurvplot(sfit,pval=TRUE)
