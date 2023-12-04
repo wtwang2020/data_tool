@@ -1,0 +1,44 @@
+################################################################################################################
+#Limma包
+#install.packages("limma") #没有limma包的可以先进行安装
+library(limma)
+group_list = factor(group_list)
+design <- model.matrix(~0+group_list)
+rownames(design) = colnames(exprSet)
+colnames(design) <- levels(group_list)
+boxplot(exprSet_matrix,col = "red",xaxt = "n",outline = F)
+##差异分析
+DGElist <- DGEList(counts = exprSet_by_group, group = group_list)
+## 使用cpm值对低表达量的基因进行过滤
+keep_gene <- rowSums( cpm(DGElist) > 1 ) >= 2 ## 前面做过过滤，这里可做，也可以不做
+DGElist <- DGElist[ keep_gene, , keep.lib.sizes = FALSE ]
+
+##使用edgeR中的calcNormFactors函数和limma中voom函数对矩阵进行标准化，也可以自行取log标准化
+library(edgeR)
+DGElist <- calcNormFactors( DGElist )
+v <- voom(DGElist, design, plot = TRUE, normalize = "quantile")
+
+##若是芯片数据、TPM数据或已标准化的数据，不需要再进行标准化，可直接从这里开始进行差异分析
+fit <- lmFit(v, design)
+cont.matrix <- makeContrasts(contrasts = c('tumor-normal'), levels = design)
+fit2 <- contrasts.fit(fit, cont.matrix)
+fit2 <- eBayes(fit2)
+
+nrDEG_limma_voom <- topTable(fit2, coef = 'tumor-normal', n = Inf)
+nrDEG_limma_voom <- na.omit(nrDEG_limma_voom)
+# 绘制火山图
+xMax=max(-log10(nrDEG_limma_voom$P.Value))
+            yMax=max(abs(nrDEG_limma_voom$logFC))
+            plot(-log10(nrDEG_limma_voom$P.Value), nrDEG_limma_voom$logFC, xlab="-log10(P.Value)",ylab="logFC",
+                 main="Volcano", xlim=c(0,xMax),ylim=c(-yMax,yMax),yaxs="i",pch=20, cex=0.4)
+            diffSub=subset(nrDEG_limma_voom, P.Value<adjustP & logFC>logFoldChange)
+            points(-log10(diffSub$P.Value), diffSub$logFC, pch=20, col="red",cex=0.4)
+            diffSub=subset(nrDEG_limma_voom, P.Value<adjustP & logFC<(-logFoldChange))
+            points(-log10(diffSub$P.Value), diffSub$logFC, pch=20, col="green",cex=0.4)
+            abline(h=0,lty=2,lwd=3)
+
+#筛选显著性差异的基因
+library(dplyr)
+#这里使用logFC > 2 且adj.P.Val < 0.05的作为差异基因，可以根据需求改变阈值大小
+nrDEG_limma_voom_signif <- nrDEG_limma_voom %>% filter(logFC > 2) %>% filter(adj.P.Val < 0.05)
+save(nrDEG_limma_voom_signif,file = 'nrDEG_limma_voom_signif.Rdata')
