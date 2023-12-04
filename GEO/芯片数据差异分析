@@ -1,4 +1,5 @@
 #######################################################已经标准化了的########################################################################
+#https://blog.csdn.net/weixin_43949246/article/details/132180610数据量少看P值
 exprSet_gene_name <- exprSet$gene
 exprSet_matrix<- exprSet %>% 
   select(-gene)
