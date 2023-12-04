@@ -1,0 +1,44 @@
+#######################################################已经标准化了的########################################################################
+exprSet_gene_name <- exprSet$gene
+exprSet_matrix<- exprSet %>% 
+  select(-gene)
+rownames(exprSet_matrix)<-exprSet_gene_name
+pdata$type = case_when(
+  pdata$`time:ch1` %in% c("after radiotherapy") ~ "after_radiotherapy",
+  pdata$`time:ch1` %in% c("before radiotherapy") ~ "before_radiotherapy")
+group_list<-pdata[,"type"]
+names(group_list)<-pdata[,"geo_accession"]
+group_list = factor(group_list)
+design <- model.matrix(~0+group_list)
+rownames(design) = colnames(exprSet_matrix)
+colnames(design) <- levels(group_list)
+boxplot(exprSet_matrix,col = "red",xaxt = "n",outline = F)
+```
+# 进行差异分析
+```{r}
+logFoldChange=1
+adjustP=0.05
+fit <- lmFit(exprSet_matrix, design)
+cont.matrix <- makeContrasts(contrasts = c('after_radiotherapy-before_radiotherapy'), levels = design)
+fit2 <- contrasts.fit(fit, cont.matrix)
+fit2 <- eBayes(fit2)
+#nrDEG_limma_voom <- topTable(fit2, coef = 'tumor-normal', n = Inf)
+nrDEG_limma_voom <- topTable(fit2, coef = 2, n = Inf)
+nrDEG_limma_voom <- na.omit(nrDEG_limma_voom)
+```
+# 火山图
+```{r}
+xMax=max(-log10(nrDEG_limma_voom$P.Value))
+            yMax=max(abs(nrDEG_limma_voom$logFC))
+            plot(-log10(nrDEG_limma_voom$P.Value), nrDEG_limma_voom$logFC, xlab="-log10(P.Value)",ylab="logFC",
+                 main="Volcano", xlim=c(0,xMax),ylim=c(-yMax,yMax),yaxs="i",pch=20, cex=0.4)
+            diffSub=subset(nrDEG_limma_voom, P.Value<adjustP & logFC>logFoldChange)
+            points(-log10(diffSub$P.Value), diffSub$logFC, pch=20, col="red",cex=0.4)
+            diffSub=subset(nrDEG_limma_voom, P.Value<adjustP & logFC<(-logFoldChange))
+            points(-log10(diffSub$P.Value), diffSub$logFC, pch=20, col="green",cex=0.4)
+            abline(h=0,lty=2,lwd=3)
+```
+# 保存数据
+```{r}
+write.csv(nrDEG_limma_voom,file="diff.csv")
+```
