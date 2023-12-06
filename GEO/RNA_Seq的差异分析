@@ -2,11 +2,12 @@
 #Limma包
 #install.packages("limma") #没有limma包的可以先进行安装
 library(limma)
+library(edgeR)
 group_list = factor(group_list)
 design <- model.matrix(~0+group_list)
 rownames(design) = colnames(exprSet)
 colnames(design) <- levels(group_list)
-boxplot(exprSet_matrix,col = "red",xaxt = "n",outline = F)
+boxplot(exprSet,col = "red",xaxt = "n",outline = F)
 ##差异分析
 DGElist <- DGEList(counts = exprSet_by_group, group = group_list)
 ## 使用cpm值对低表达量的基因进行过滤
@@ -14,7 +15,6 @@ keep_gene <- rowSums( cpm(DGElist) > 1 ) >= 2 ## 前面做过过滤，这里可�
 DGElist <- DGElist[ keep_gene, , keep.lib.sizes = FALSE ]
 
 ##使用edgeR中的calcNormFactors函数和limma中voom函数对矩阵进行标准化，也可以自行取log标准化
-library(edgeR)
 DGElist <- calcNormFactors( DGElist )
 v <- voom(DGElist, design, plot = TRUE, normalize = "quantile")
 
