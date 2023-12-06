@@ -1,3 +1,4 @@
+###########
 setwd("D:/课本/与同学的合作项目/我自己/王勇飞/王勇飞复现")
 library(GEOquery)
 library(AnnoProbe)
@@ -38,3 +39,6 @@ exprSet_TRIM72$TRIM72_risk <- ifelse(exprSet_TRIM72$TRIM72 > median_value, "高�
 ##生存分析
 sfit <- survfit(Surv(time, event)~TRIM72_risk, data=exprSet_TRIM72)
 ggsurvplot(sfit,pval=TRUE)
+##########基因注释
+library(clusterProfiler) 
+name <- bitr(data$ENS,fromType = 'ENSEMBL',toType = 'SYMBOL',OrgDb = 'org.Hs.eg.db')
