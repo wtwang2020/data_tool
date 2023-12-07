@@ -1,0 +1,31 @@
+#请注意，该方法基于seurat5对象
+library(DoubletFinder)
+Find_doublet <- function(data){
+  # 寻找最优pk值
+  data <- NormalizeData(data)
+  data <- FindVariableFeatures(data, selection.method = "vst", nfeatures = 2000)
+  data <- ScaleData(data)
+  data <- RunPCA(data)
+  data <- RunUMAP(data, dims = 1:10)
+  data <- FindNeighbors(data, dims = 1:10)
+  sweep.res.list <- paramSweep(data, PCs = 1:10, sct = FALSE) # 若使用SCT方法 标准化则'sct=T'
+  sweep.stats <- summarizeSweep(sweep.res.list, GT = FALSE)
+  bcmvn <- find.pK(sweep.stats)
+  p<-as.numeric(as.vector(bcmvn[bcmvn$MeanBC==max(bcmvn$MeanBC),]$pK))
+  
+  # 期望doublet数量
+  homotypic.prop <-   modelHomotypic(data@meta.data$seurat_clusters) #可使用注释好的细胞类型
+  Doubletrate <- 0.05
+  nExp_poi <- round(Doubletrate*ncol(data))
+  nExp_poi.adj <- round(nExp_poi*(1-homotypic.prop))
+
+  # 鉴定doublets
+  data <- doubletFinder(data, PCs = 1:20, pN = 0.25, pK = p, nExp = nExp_poi.adj, reuse.pANN = FALSE, sct = FALSE)
+  colnames(data@meta.data)[ncol(data@meta.data)] = "doublet_info"
+  data
+}
+#示例
+GSE_5784 <- CreateSeuratObject(counts = GSE_5784, project = "GSE_5784", min.cells = 3, min.features = 200)
+GSE_5784 <- Find_doublet(GSE_5784)
+DimPlot(GSE_5784, reduction = "umap", group.by = "doublet_info")
+GSE_5784 <- subset(GSE_5784,subset=doublet_info=="Singlet")
