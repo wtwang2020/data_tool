@@ -1,0 +1,97 @@
+library(Seurat)
+sce <- readRDS("~/wangweitao/colon_cancer/data_process/sce_create.RData")
+# filter low quality gene
+mito_genes <- rownames(sce)[grep("^MT-", rownames(sce))]
+sce <- PercentageFeatureSet(sce, "^MT-", col.name = "pMT")
+sce[["percent.mt"]] <- PercentageFeatureSet(sce, pattern = "^MT-")
+nFeature_lower <- 200
+nFeature_upper <- 8000
+selected_c <- WhichCells(sce, expression = nFeature_RNA > nFeature_lower & nFeature_RNA < nFeature_upper)
+VlnPlot(sce, features = c("nCount_RNA", "nFeature_RNA", "pMT"), group.by = "orig.ident")
+pMT_upper <- 15
+selected_mito <- WhichCells(sce, expression = pMT < pMT_upper)
+sce <- subset(sce, cells = selected_mito)
+# run PCA reduction
+sce <- NormalizeData(sce)
+sce <- FindVariableFeatures(sce)
+sce <- ScaleData(sce)
+sce <- RunPCA(sce,npcs = 30,verbose = FALSE)
+sce <- FindNeighbors(sce, dims = 1:30, reduction = "pca")
+sce <- FindClusters(sce, resolution = 1, cluster.name = "pca_umap")
+sce <- RunUMAP(sce, reduction = "pca", dims = 1:30, reduction.name = "pca_umap")
+# select the intergrated method
+## CCA
+options(future.globals.maxSize = 1000 * 1024^16)
+sce <- IntegrateLayers(object = sce, method = CCAIntegration,
+                       orig.reduction = "pca", new.reduction = "integrated.cca",
+                       verbose = FALSE)
+sce <- FindNeighbors(sce, reduction = "integrated.cca", dims = 1:30)
+sce <- RunUMAP(sce, reduction = "integrated.cca", dims = 1:30, reduction.name = "integrated.cca")
+DimPlot(sce, reduction = "pca_umap", group.by = "Group")
+DimPlot(sce, reduction = "pca_umap", group.by = "Group")
+DimPlot(sce, reduction = "integrated.cca", group.by = "Group")
+DimPlot(sce,group.by = "orig.ident", reduction = "integrated.cca")
+## harmony
+sce <- IntegrateLayers(
+  object = sce, method = HarmonyIntegration,
+  orig.reduction = "pca", new.reduction = "harmony",
+  verbose = FALSE,
+  meta_data = meta_data,
+  group.by.vars = c("orig.ident", "Group")
+)
+sce <- FindNeighbors(sce, reduction = "harmony", dims = 1:30)
+sce <- RunUMAP(sce, reduction = "harmony", dims = 1:30, reduction.name = "harmony")
+DimPlot(sce, reduction = "pca_umap", group.by = "Group")
+DimPlot(sce, reduction = "harmony", group.by = "Group")
+## rpca
+sce <- IntegrateLayers(object = sce, method = RPCAIntegration,
+                       orig.reduction = "pca", new.reduction = 'integrated.rpca',
+                       verbose = FALSE,
+                       k.weight = 50
+
+
+)
+sce <- FindNeighbors(sce, reduction = "integrated.rpca", dims = 1:30)
+sce <- RunUMAP(sce, reduction = "integrated.rpca", dims = 1:30, reduction.name = "integrated.rpca")
+DimPlot(sce, reduction = "pca_umap", group.by = "Group")
+DimPlot(sce, reduction = "integrated.rpca", group.by = "Group")
+#begin
+saveRDS(sce,file = "~/wangweitao/colon_cancer/data_process/sce_debatch.RData")
+# 寻找合适的分辨率
+```{r}
+for (i in seq(0.1, 2, 0.1)) {
+  sce <- FindClusters(sce, resolution = i)
+  print(DimPlot(sce, reduction = "integrated.cca") +
+          labs(title = paste0("resolution: ", i)))
+}
+clustree(sce)
+DimPlot(sce, reduction = "integrated.cca", group.by = "RNA_snn_res.1.5")
+sce <- JoinLayers(sce)
+# 找makers准备进行细胞注释
+DefaultAssay(sce) <- "RNA"
+Idents(sce) <- sce$RNA_snn_res.1.5
+all.markers <- FindAllMarkers(sce,
+                              only.pos = TRUE,
+                              min.pct = 0.1,
+                              logfc.threshold = 0.25)
+significant.markers <- all.markers[all.markers$p_val_adj < 0.05,]
+# 读取sce数据绘制点图
+                          "COL1A2","COL3A1","MYH11","ACTA2",#成纤维细胞
+                          "CD68,XCR1,CLEC9A","CLEC1OA","CD1C","S100A8","S100A9","TPSAB1","OSM","LYZ","AIF1","C1QB","CD14",#骨髓细胞
+                          "NKG7","KLRC1","CCR7","FOXP3","CTLA4","CDSB","CXCR6","CD3D","CD3E","CD3G","TRAC","TRBC1",#T细胞
+                          "MZB1","IGHA1","CD19","AICDA","MS4A1","CD79A","CD79B","TNFRSF17",#B细胞
+                          "CLDN5","PECAM1","VWF","CDH5"), group.by = "RNA_snn_res.1.5")#内皮细胞
+## 细胞注释
+sce$cell_type = case_when(
+  sce$RNA_snn_res.1.4 %in% c(0,1,2,3,13,17,18,19,23,29) ~ "epithelial cell",
+  sce$RNA_snn_res.1.4 %in% c(16,25) ~ "Fibroblast cell",
+  sce$RNA_snn_res.1.4 %in% c(9,14,15,21,28,32) ~ "myeloid cell",
+  sce$RNA_snn_res.1.4 %in% c(4,5,6,7,8,11,12,26,30) ~ "T cell",
+  sce$RNA_snn_res.1.4 %in% c(10,22,24) ~ "B cell",
+  sce$RNA_snn_res.1.4 %in% c(27) ~ "endothelial cell",
+  sce$RNA_snn_res.1.4 %in% c(20,31) ~ "other"
+)
+DimPlot(sce, reduction = "integrated.cca", group.by = 'Group')
+# DimPlot(sce, reduction = "integrated.cca", group.by = 'copykat.pred')
+DimPlot(sce, reduction = "integrated.cca", group.by = "cell_type")
+DimPlot(sce, reduction = "integrated.cca", group.by = "RNA_snn_res.1.5)
