@@ -1,0 +1,23 @@
+### different expression accroding to the Group
+BiocManager::install(c("edgeR", "DESeq2", "limma"))
+devtools::install_github("neurorestore/Libra")
+library(clusterProfiler)
+library(Libra)
+Cell <- rep("Malignant", nrow(Mali@meta.data))
+Mali$Cell <- Cell
+#wilcox for singlecell methods, to edgeR for pseudobulk methods, and negbinom for mixedmodel methods.
+DE <- run_de(Mali, replicate_col = "orig.ident", cell_type_col = "Cell", label_col = "Group",
+             de_family = "pseudobulk",
+             de_method = "edgeR",
+             n_threads = 15)
+logFC_cutoff <- 0.25
+DE$change <- as.factor(ifelse(DE$p_val < 0.05 & abs(DE$avg_logFC) > logFC_cutoff,
+                              ifelse(DE$avg_logFC > logFC_cutoff, 'UP', 'DOWN'), 'NOT'))
+DE$symbol <- DE$gene
+#BiocManager::install("org.Hs.eg.db",force = T)
+library(org.Hs.eg.db)
+s2e <- bitr(DE$symbol,
+            fromType = "SYMBOL",
+            toType = "ENTREZID",
+            OrgDb = org.Hs.eg.db)
+DE <- inner_join(DE, s2e, by = c("symbol" = "SYMBOL"))
