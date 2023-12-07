@@ -1,0 +1,30 @@
+#运行前确保自己的seurat版本为4.3，5的话会报错
+##准备文件
+#表达矩阵
+counts <- GetAssayData(sce, slot = 'counts')
+#细胞注释文件
+Idents(sce) <- sce$cell_type
+anno <- data.frame(Idents(sce))
+#基因注释文件
+gene_order <- "~/wangweitao/glioblastoma/raw_data/gene_pos.txt"
+##运行infercnv
+library(infercnv)
+options(bitmapType='cairo')
+options(scipen = 100)
+options(error = function() traceback(2))
+options(bitmapType="Xlib") # if you are using linux system
+
+infercnv_obj = CreateInfercnvObject(raw_counts_matrix = counts,
+                                        annotations_file = anno,
+                                        delim="\t",
+                                        gene_order_file = gene_order,
+                                        min_max_counts_per_cell = c(100, +Inf),
+                                        ref_group_names = c("myeloid cell","T cell","B cell"))
+
+infercnv_obj = infercnv::run(infercnv_obj,
+                             cutoff=0.1, # cutoff=1 works well for Smart-seq2, and cutoff=0.1 works well for 10x Genomics
+                             out_dir="~/wangweitao/colon_cancer/data_process/cnv_output", 
+                             cluster_by_groups=TRUE, 
+                             denoise=TRUE,
+                             HMM=TRUE,
+                             num_threads=18)
