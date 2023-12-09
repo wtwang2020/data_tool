@@ -1,0 +1,77 @@
+####################################################系列对象#####################
+实例化（可以通过向量和字典创建）
+myvar = pd.Series(a, index = ["x", "y", "z"])
+方法
+# 获取索引
+index = series_with_index.index
+# 获取值数组
+values = series_with_index.values
+# 获取描述统计信息
+stats = series_with_index.describe()
+# 获取最大值和最小值的索引
+max_index = series_with_index.idxmax()
+min_index = series_with_index.idxmin()
+####################################################数据框对象####################
+实例化
+pandas.DataFrame( data, index, columns, dtype, copy)
+data：一组数据(ndarray、series, map, lists, dict 等类型)。
+index：索引值，或者可以称为行标签。
+columns：列标签，默认为 RangeIndex (0, 1, 2, …, n) 。
+dtype：数据类型。
+copy：拷贝数据，默认为 False。
+# 从CSV文件创建 DataFrame
+df_csv = pd.read_csv('example.csv')
+df.to_csv('site.csv')
+# 从Excel文件创建 DataFrame
+df_excel = pd.read_excel('example.xlsx')
+# 从字典列表创建 DataFrame
+data_list = [{'Name': 'Alice', 'Age': 25}, {'Name': 'Bob', 'Age': 30}]
+df_from_list = pd.DataFrame(data_list)
+方法
+# 获取列名
+columns = df.columns
+# 获取形状（行数和列数）
+shape = df.shape
+# 获取索引
+index = df.index
+# 获取描述统计信息
+stats = df.describe()
+# 删除列
+df.drop('City', axis=1, inplace=True)
+# 排序
+df.sort_values(by='Age', ascending=False, inplace=True)
+# 重命名列
+df.rename(columns={'Name': 'Full Name'}, inplace=True)
+##################################################数据清洗##########################
+1.缺失值处理
+DataFrame.dropna(axis=0, how='any', thresh=None, subset=None, inplace=False)
+axis：默认为 0，表示逢空值剔除整行，如果设置参数 axis＝1 表示逢空值去掉整列。
+how：默认为 'any' 如果一行（或一列）里任何一个数据有出现 NA 就去掉整行，如果设置 how='all' 一行（或列）都是 NA 才去掉这整行。
+thresh：设置需要多少非空值的数据才可以保留下来的。
+subset：设置想要检查的列。如果是多个列，可以使用列名的 list 作为参数。
+inplace：如果设置 True，将计算得到的值直接覆盖之前的值并返回 None，修改的是源数据。
+#移除 ST_NUM 列中字段值为空的行：
+df.dropna(subset=['ST_NUM'], inplace = True)
+df.fillna(12345, inplace = True)
+df['PID'].fillna(12345, inplace = True)
+#均值替换
+mean()、median() 和 mode()
+x = df["ST_NUM"].mean()
+df["ST_NUM"].fillna(x, inplace = True)
+
+2.数据操作
+df.loc[2, 'age'] = 30 # 修改数据，行列
+df.replace(old_value, new_value)
+df.loc[row_index, column_name]
+df.iloc[row_index, column_index]
+df.filter(items=[column_name1, column_name2])	选择指定的列；
+df.filter(regex='regex')	选择列名匹配正则表达式的列；
+df.sort_index()
+df.groupby(column_name)	按照指定列进行分组；
+df.aggregate(function_name)	对分组后的数据进行聚合操作；
+df.pivot_table(values, index, columns, aggfunc)	生成透视表。
+pd.concat([df1, df2])	将多个数据框按照行或列进行合并；
+pd.merge(df1, df2, on=column_name)	按照指定列将两个数据框进行合并。
+3.重复数据
+df.duplicated()
+df.drop_duplicates(inplace = True)
