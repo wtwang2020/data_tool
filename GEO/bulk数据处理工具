@@ -15,7 +15,7 @@ GSE24551 = GEOquery::getGEO(GEO = "GSE24551",destdir = ".", getGPL = T,
 data3<-GSE30378[["GSE30378_series_matrix.txt.gz"]]@assayData[["exprs"]]#表达矩阵
 dim(data3)
 max(data3)
-if (max(data2)>50){
+if (max(data3)>50){
   data3 = log2(data3+1)
 }
 
