@@ -13,6 +13,12 @@ GSE24551 = GEOquery::getGEO(GEO = "GSE24551",destdir = ".", getGPL = T,
                             AnnotGPL = T)
 ##获得数据                           
 data3<-GSE30378[["GSE30378_series_matrix.txt.gz"]]@assayData[["exprs"]]#表达矩阵
+dim(data3)
+max(data3)
+if (max(data2)>50){
+  data3 = log2(data3+1)
+}
+
 pdata1<-pData(GSE24551[[1]]) #临床数据
 pdata2<-pData(GSE24551[[2]]) 
 gpl <- getGEO("GPL5175", destdir=".")#平台数据
