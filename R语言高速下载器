@@ -1,0 +1,19 @@
+setwd("~/wangweitao/MDR/细菌与免疫细胞/immue.raw")
+sequence <- seq(90001391, 90002121)
+# 基础URL
+base_url <- "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90001001-GCST90002000/"
+# 循环读取并下载每个文件
+for (id in sequence) {
+  # 构建完整的URL
+  file_url <- paste0(base_url,"GCST", id, "/", "GCST",id, "_buildGRCh37.tsv.gz")
+  
+  # 定义保存文件的路径和名称
+  save_path <- paste0("GCST",id, "_buildGRCh37.tsv")
+  
+  # 使用aria2下载文件，这里使用-c选项尝试续传，-x选项设置连接数
+  cmd <- sprintf('aria2c -c -x 16 -o "%s" "%s"', save_path, file_url)
+  system(cmd)
+  
+  # 打印消息确认下载完成
+  cat("Downloaded:", id, "\n")
+}
