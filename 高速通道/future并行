@@ -1,0 +1,26 @@
+library(future.apply)
+library(progressr)
+
+# 设置未来（future）的计划，使用多核进行并行计算
+plan(multisession, workers = 2) # 你可以根据自己的系统资源调整workers的数量
+
+# 创建要处理的数据
+numbers <- 1:20
+
+# 初始化并使用进度条
+handlers(global = TRUE)
+with_progress({
+  p <- progressor(along = numbers)
+  
+  results <- future_lapply(numbers, function(n) {
+    p() # 更新进度条
+    Sys.sleep(0.1) # 模拟一些计算工作
+    n^2
+  })
+})
+
+# 查看结果
+print(results)
+
+# 重置未来（future）的计划为顺序执行，避免影响后续的代码
+plan(sequential)
