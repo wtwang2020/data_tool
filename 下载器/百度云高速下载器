@@ -1,1 +1,2 @@
+bypy upload --processes 12
 bypy downdir --downloader aria2
