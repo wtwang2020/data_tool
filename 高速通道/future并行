@@ -18,7 +18,15 @@ with_progress({
     n^2
   })
 })
+results_df <- do.call(rbind, results_list)
 
+# 保存结果到CSV文件
+fwrite(results_df, "./final_result/total_data.csv", sep = ",", quote = FALSE, row.names = FALSE)
+
+# 查看结果
+print(results_df)
+# 重置全局未来的计划为默认设置
+plan(sequential)
 # 查看结果
 print(results)
 
