@@ -11,7 +11,7 @@ registerDoParallel(cores = numCores)
 numbers <- 1:20
 
 # 使用foreach进行并行计算
-results <- foreach(n = numbers, .combine = rbind) %dopar% {
+results <- foreach(n = numbers,.errorhandling="pass", .combine = rbind) %dopar% {
   squared <- n^2  # 计算平方
   data.frame(original = n, squared = squared)  # 返回一个包含原始数字和计算结果的数据框
 }
