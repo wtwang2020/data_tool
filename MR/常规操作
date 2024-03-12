@@ -1,0 +1,141 @@
+foreach(i=matched_files, .errorhandling = "pass") %do%{
+  i = matched_files[1]
+  i
+  expo_rt<-read_exposure_data(
+    filename = i,
+    sep = "\t",
+    snp_col = "MarkerName",
+    beta_col = "Effect",
+    se_col = "StdErr",
+    effect_allele_col = "Allele1",
+    other_allele_col = "Allele2",
+    eaf_col = "Freq1",
+    pval_col = "P-value")
+  expo_rt$samplesize.exposure=7824 
+  
+  #数据与代码声明
+  #如果没有购买SCI狂人团队或者生信狂人团队的正版会员
+  #没有经过我们的同意，擅自使用我们整理好的数据与代码发文章
+  #如果被我们发现你的文章用了我们的数据与代码，我们将使用一切手段让你的文章撤稿
+  #todo
+  
+  outc_rt <- read_outcome_data(
+    snps = expo_rt$SNP,
+    filename = "exposure.csv",
+    sep = ",",
+    snp_col = "SNP",
+    beta_col = "beta",
+    se_col = "se",
+    effect_allele_col = "Effect_allele",
+    other_allele_col = "Other_allele",
+    #eaf_col = "af_alt",
+    pval_col = "pvalue")
+  
+  #####################################
+  ####关注微信公众号生信狂人团队
+  ###遇到代码报错等不懂的问题可以添加微信scikuangren进行答疑
+  ###作者邮箱：sxkrteam@shengxinkuangren.com 
+  
+  #数据与代码声明
+  #如果没有购买SCI狂人团队或者生信狂人团队的正版会员
+  #没有经过我们的同意，擅自使用我们整理好的数据与代码发文章
+  #如果被我们发现你的文章用了我们的数据与代码，我们将使用一切手段让你的文章撤稿
+  
+  harm_rt <- harmonise_data(
+    exposure_dat =  expo_rt, 
+    outcome_dat = outc_rt,action=2)
+  harm_rt$R2 <- (2 * (harm_rt$beta.exposure^2) * harm_rt$eaf.exposure * (1 - harm_rt$eaf.exposure)) /
+    (2 * (harm_rt$beta.exposure^2) * harm_rt$eaf.exposure * (1 - harm_rt$eaf.exposure) +
+       2 * harm_rt$samplesize.exposure*harm_rt$eaf.exposure * (1 - harm_rt$eaf.exposure) * harm_rt$se.exposure^2)
+  harm_rt$f <- harm_rt$R2 * (harm_rt$samplesize.exposure - 2) / (1 - harm_rt$R2)
+  harm_rt$meanf<- mean( harm_rt$f)
+  harm_rt<-harm_rt[harm_rt$f>10,]
+  mr_result<- mr(harm_rt)
+  result_or=generate_odds_ratios(mr_result)
+  newid=i
+  filename=paste0("final_result/",newid)
+  dir.create(filename)
+  write.table(harm_rt, file =paste0(filename,"/harmonise.txt"),row.names = F,sep = "\t",quote = F)
+  a = result_or[,5:ncol(result_or)]
+  
+  if ((a$or[1] > 1 && a$or_lci95[1] > 1 && a$or_uci95[1] > 1) || 
+      (a$or[1] < 1 && a$or_lci95[1] < 1 && a$or_uci95[1] < 1)) {
+    b = "MR Egger满足"
+  } else {
+    b = "MR Egger不满足"
+  }
+  
+  if ((a$or[2] > 1 && a$or_lci95[2] > 1 && a$or_uci95[2] > 1) || 
+      (a$or[2] < 1 && a$or_lci95[2] < 1 && a$or_uci95[2] < 1)) {
+    c = "Weighted median满足"
+  } else {
+    c = "Weighted median不满足"
+  }
+  if ((a$or[3] > 1 && a$or_lci95[3] > 1 && a$or_uci95[3] > 1) || 
+      (a$or[3] < 1 && a$or_lci95[3] < 1 && a$or_uci95[3] < 1)) {
+    d = "Inverse variance weighted满足"
+  } else {
+    d = "Inverse variance weighted不满足"
+  }
+  if ((a$or[4] > 1 && a$or_lci95[4] > 1 && a$or_uci95[4] > 1) || 
+      (a$or[4] < 1 && a$or_lci95[4] < 1 && a$or_uci95[4] < 1)) {
+    e = "Simple mode满足"
+  } else {
+    e = "Simple mode不满足"
+  }
+  if ((a$or[5] > 1 && a$or_lci95[5] > 1 && a$or_uci95[5] > 1) || 
+      (a$or[5] < 1 && a$or_lci95[5] < 1 && a$or_uci95[5] < 1)) {
+    f = "Weighted mode满足"
+  } else {
+    f = "Weighted mode不满足"
+  }
+  
+  write.table(result_or[,5:ncol(result_or)],file =paste0(filename,"/OR.csv"),row.names = F,sep = ",",quote = F)
+  pleiotropy=mr_pleiotropy_test(harm_rt)
+  if (pleiotropy$pval > 0.05) {
+    g = "不存在多项性"
+  }else {
+    cat("存在多项性\n")
+    g = "存在多项性"
+  }
+  write.table(pleiotropy, file = paste0(filename, "/pleiotropy.txt"), sep = "\t", quote = FALSE)
+  heterogeneity=mr_heterogeneity(harm_rt)
+  write.table(heterogeneity,file = paste0(filename,"/heterogeneity.txt"),sep = "\t",quote = F)
+  
+  #####################################
+  #数据与代码声明
+  #如果没有购买SCI狂人团队或者生信狂人团队的正版会员
+  #没有经过我们的同意，擅自使用我们整理好的数据与代码发文章
+  #如果被我们发现你的文章用了我们的数据与代码，我们将使用一切手段让你的文章撤稿
+  
+  
+  ####关注微信公众号生信狂人团队
+  ###遇到代码报错等不懂的问题可以添加微信scikuangren进行答疑
+  ###作者邮箱：sxkrteam@shengxinkuangren.com
+  p1 <- mr_scatter_plot(mr_result, harm_rt)
+  ggsave(p1[[1]], file=paste0(filename,"/scatter.pdf"), width=8, height=8)
+  #####################################
+  #数据与代码声明
+  #如果没有购买SCI狂人团队或者生信狂人团队的正版会员
+  #没有经过我们的同意，擅自使用我们整理好的数据与代码发文章
+  #如果被我们发现你的文章用了我们的数据与代码，我们将使用一切手段让你的文章撤稿
+  
+  ####关注微信公众号生信狂人团队
+  ###遇到代码报错等不懂的问题可以添加微信scikuangren进行答疑
+  ###作者邮箱：sxkrteam@shengxinkuangren.com
+  singlesnp_res<- mr_singlesnp(harm_rt)
+  singlesnpOR=generate_odds_ratios(singlesnp_res)
+  write.table(singlesnpOR,file=paste0(filename,"/singlesnpOR.txt"),row.names = F,sep = "\t",quote = F)
+  p2 <- mr_forest_plot(singlesnp_res)
+  ggsave(p2[[1]], file=paste0(filename,"/forest.pdf"), width=8, height=8)
+  sen_res<- mr_leaveoneout(harm_rt)
+  p3 <- mr_leaveoneout_plot(sen_res)
+  ggsave(p3[[1]], file=paste0(filename,"/sensitivity-analysis.pdf"), width=8, height=8)
+  res_single <- mr_singlesnp(harm_rt)
+  p4 <- mr_funnel_plot(singlesnp_res)
+  ggsave(p4[[1]], file=paste0(filename,"/funnelplot.pdf"), width=8, height=8)
+  presso=run_mr_presso(harm_rt,NbDistribution = 1000)
+  capture.output(presso,file = paste0(filename,"/presso.txt"))
+  my_anno <- rbind(my_anno, data.frame(newid=newid, b=b, c=c, d=d, e=e, f=f,g=g, stringsAsFactors=FALSE))
+  write.table(my_anno, file="~/wangweitao/MDR/细菌与脓毒症/final_result/results.txt", sep="\t", row.names=FALSE, quote=FALSE)
+}
