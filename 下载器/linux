@@ -1,1 +1,7 @@
 aria2c https://gwas.mrcieu.ac.uk/files/ukb-b-12651/ukb-b-12651.vcf.gz
+
+-x：指定连接到同一服务器的最大连接数。例如，-x16表示最多使用16个连接。
+-s：指定文件被分割的部分数量，用来并行下载。例如，-s16意味着文件将被分成16部分下载。
+-k：指定每个下载部分的最小大小。配合-s使用可以更细粒度地控制下载。例如，-k1M每个部分至少1MB。
+aria2c -x16 -s16 https://gwas.mrcieu.ac.uk/files/ukb-b-12651/ukb-b-12651.vcf.gz
+
