@@ -1,0 +1,6 @@
+exp= extract_instruments(outcomes="ukb-b-19732",p1 = 5e-08,
+                         clump = TRUE,r2 = 0.01,kb = 10000,
+                         access_token = NULL)#提取暴露数据
+out = extract_outcome_data(snp = exp$SNP,
+                           outcomes = "",
+                           proxies = FALSE)
