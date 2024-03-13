@@ -1,0 +1,17 @@
+flag <- TRUE
+while (flag) {tryCatch({
+outcome<-extract_outcome_data(snps= exposure$SNP, outcomes="ieu-a-1102")
+  flag <- FALSE
+},
+warning=function(c){
+ 
+},
+error=function(x){
+ 
+},
+finally={
+ 
+})
+ 
+}
+
