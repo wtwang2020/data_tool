@@ -12,7 +12,9 @@ foreach(i=matched_files, .errorhandling = "pass") %do%{
     eaf_col = "Freq1",
     pval_col = "P-value")
   expo_rt$samplesize.exposure=7824 
-  
+  expo_rt<- expo_rt[expo_rt$pval.exposure < 1e-5,]
+  expo_rt <- clump_data(expo_rt,clump_kb = 10000,
+                      clump_r2 = 0.001)
   #数据与代码声明
   #如果没有购买SCI狂人团队或者生信狂人团队的正版会员
   #没有经过我们的同意，擅自使用我们整理好的数据与代码发文章
