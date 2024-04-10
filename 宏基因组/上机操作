@@ -1,0 +1,13 @@
+conda create --name mcro python=3.8
+conda activate mcro
+conda install sra-tools
+prefetch SRRXXXXXX
+prefetch --option-file SRR_list
+
+##单端
+fastq-dump SRRXXXXXX.sra
+
+##双端
+fastq-dump --split-3 SRRXXXXXX.sra
+
+prefetch SRR27829839
