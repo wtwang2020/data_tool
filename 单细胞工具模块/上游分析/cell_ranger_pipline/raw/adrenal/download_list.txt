@@ -1,0 +1,11 @@
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457871/CRR457871_f1.fastq.gz
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457871/CRR457871_f2.fastq.gz
+
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457872/CRR457872_f1.fastq.gz
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457872/CRR457872_f2.fastq.gz
+
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457873/CRR457873_f1.fastq.gz
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457873/CRR457873_f2.fastq.gz
+
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457874/CRR457874_f1.fastq.gz
+ftp://download.big.ac.cn/gsa2/CRA006610/CRR457874/CRR457874_f2.fastq.gz
