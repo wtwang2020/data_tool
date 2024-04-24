@@ -13,6 +13,8 @@
 #################
 #################
 #################
+#################(cd raw/adrenal && aria2c -i ftp_download_list.txt -j 10 -x 4 -s 10)
+
 wget ftp://ftp.ensembl.org/pub/release-93/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
 gunzip Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
 
