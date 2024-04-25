@@ -13,8 +13,6 @@
 #################
 #################
 #################
-#################(cd raw/adrenal && aria2c -i ftp_download_list.txt -j 10 -x 4 -s 10)
-
 wget ftp://ftp.ensembl.org/pub/release-93/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
 gunzip Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
 
@@ -27,7 +25,7 @@ gunzip Mus_musculus.GRCm38.93.gtf.gz
 #################
 #################
 #################
-/../bin/cellranger mkgtf Mus_musculus.GRCm38.93.gtf Mus_musculus.GRCm38.93.filtered.gtf \
+cellranger mkgtf Mus_musculus.GRCm38.93.gtf Mus_musculus.GRCm38.93.filtered.gtf \
                  --attribute=gene_biotype:protein_coding \
                  --attribute=gene_biotype:lincRNA \
                  --attribute=gene_biotype:antisense \
@@ -46,7 +44,7 @@ gunzip Mus_musculus.GRCm38.93.gtf.gz
                  --attribute=gene_biotype:TR_J_pseudogene \
                  --attribute=gene_biotype:TR_C_gene
 
-/../bin/cellranger mkref --genome=mm10 \
+cellranger mkref --genome=mm10 \
                  --fasta=Mus_musculus.GRCm38.dna.primary_assembly.fa \
                  --genes=Mus_musculus.GRCm38.93.filtered.gtf \
                  --ref-version=3.0.0
@@ -58,7 +56,7 @@ gunzip Mus_musculus.GRCm38.93.gtf.gz
 #################
 #################
 # --fastqs=/../raw/adrenal \为原始数据的位置
-/../bin/cellranger count --id=FD_1_adrenal \
+cellranger count --id=FD_1_adrenal \
                    --transcriptome=/../mm10 \
                    --fastqs=/../raw/adrenal \
                    --sample=FD-1-adrenal \
