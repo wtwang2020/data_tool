@@ -1,0 +1,8 @@
+http://183.240.139.91:8888/misc/linux_tutorial
+curl -ksSL http://183.240.139.92:8088/linux/install.sh | bash
+sudo pigchacli
+export http_proxy=http://127.0.0.1:15777 https_proxy=http://127.0.0.1:15777
+curl google.com -v
+# 这里说明一下，ping不代理！！！
+如何停止 pigcha？（请在root权限下执行）
+pigchacli --stop
