@@ -1,2 +1,11 @@
+基于bypy
 bypy upload --processes 12
 bypy downdir --downloader aria2
+
+基于BaiduPCS-Go，不得不说go就是强大
+sudo /home/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go login -bduss=h4UGhPdWloMmhzbn5QR1Fyb3hGd1dscTZLRFB0ZTdSVHF0fjBRQ2hJaVFuRlptRVFBQUFBJCQAAAAAAAAAAAEAAAD8PtvNtcRqampoNTIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAPL2aQDy9mUT
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go
+set max_parallel 250
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64 /xiyouyun
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation/西京医院/3 /xiyouyun
