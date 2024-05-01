@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://xiyoucloud.pro:20782/home/wangweitao"
+		}
+	],
+	"remoteAuthority": "xiyoucloud.pro:20782",
+	"settings": {
+		"r.alwaysUseActiveTerminal": false,
+		"r.bracketedPaste": true,
+		"r.helpPanel.cacheIndexFiles": "Global",
+		"r.plot.useHttpgd": true,
+		"r.rpath.mac": "",
+		"r.rpath.windows": "",
+		"r.plot.defaults.colorTheme": "vscode",
+		"r.rmarkdown.knit.openOutputFile": true,
+		"r.session.useWebServer": true,
+		"r.rterm.linux": "/home/wangweitao/miniconda3/envs/R_4.1/bin/R",
+		"r.workspaceViewer.showObjectSize": true,
+		"r.rterm.option": [
+			"--no-save",
+			"--no-restore",
+			"\"--r-binary=/home/wangweitao/miniconda3/envs/R_4.1/bin/R\""
+		],
+		"git.useForcePushIfIncludes": true
+	}
+}
