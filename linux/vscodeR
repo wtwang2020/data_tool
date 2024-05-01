@@ -25,3 +25,9 @@
 		"git.useForcePushIfIncludes": true
 	}
 }
+
+cat(Sys.getenv("PATH"), sep="\n")
+# 将编译器路径添加到 PATH 环境变量
+Sys.setenv(PATH=paste("/home/wangweitao/miniconda3/envs/R_4.1/bin", Sys.getenv("PATH"), sep=":"))
+# 再次尝试安装
+install.packages("reticulate")
