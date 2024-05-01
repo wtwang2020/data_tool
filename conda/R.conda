@@ -1,0 +1,3 @@
+conda install mamba -n base -c conda-forge
+mamba create --name R_4.1 r-base=4.1 r-essentials r-tidyverse
+
