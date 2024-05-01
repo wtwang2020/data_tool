@@ -1,3 +1,27 @@
 conda install mamba -n base -c conda-forge
 mamba create --name R_4.1 r-base=4.1 r-essentials r-tidyverse
+mamba init
+mamba activate R_4.1
+install.packages("reticulate",)
+
+
+radian --r-binary=/usr/bin/R
+radian --r-binary=/home/wangweitao/miniconda3/envs/R_4.1/bin/R
+临时路径
+.libPaths(c(.libPaths(),
+            "/usr/local/lib/R/site-library",
+            "/usr/lib/R/site-library",
+            "/usr/lib/R/library"
+            ))
+
+自动执行路径
+vi ~/.Rprofile
+.First <- function() {
+  cat("\nWelcome at start of R session.\n\n")
+  .libPaths(c("/usr/local/lib/R/site-library",
+              "/usr/lib/R/site-library",
+              "/usr/lib/R/library",
+              .libPaths()))
+}
+
 
