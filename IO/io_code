@@ -8,4 +8,7 @@ qsave(objects_to_save, "full_environment.qs", preset = "balanced")
 # 读取保存的环境对象
 restored_objects <- qread("full_environment.qs")
 # 将对象重新放回全局环境
-list2env(restored_objects, envir = globalenv())
+
+/home/wangweitao/wangweitao/learning/mine/miningcore/src/Miningcore/Persistence/Postgres/Scripts/createdb.sql
+sudo find / -type f -name "createdb.sql"
+sudo -u postgres psql -d miningcore -f /home/wangweitao/wangweitao/learning/mine/miningcore/src/Miningcore/Persistence/Postgres/Scripts/createdb.sql
