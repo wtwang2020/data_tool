@@ -10,3 +10,4 @@ set max_parallel 250
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64 /xiyouyun
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation/西京医院/3 /xiyouyun
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation/西京医院/4 /xiyouyun
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go d /xiyouyun/11 --saveto /home/wangweitao/wangweitao/colaberation/yangtingting/1 -p 8
