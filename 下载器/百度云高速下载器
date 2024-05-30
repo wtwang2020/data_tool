@@ -11,3 +11,13 @@ sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPC
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation/西京医院/3 /xiyouyun
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation/西京医院/4 /xiyouyun
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go d /xiyouyun/11 --saveto /home/wangweitao/wangweitao/colaberation/yangtingting/1 -p 8
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/MDR_new /xiyouyun -p 15
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/MDR /xiyouyun -p 15
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/colaberation /xiyouyun -p 15
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /home/wangweitao/wangweitao/睡眠障碍与血压 /xiyouyun -p 15
+> .libPaths()
+[1] "/usr/local/lib/R/site-library" "/usr/lib/R/site-library"      
+[3] "/usr/lib/R/library"     
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/local/lib/R/site-library /xiyouyun -p 15
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/lib/R/site-library /xiyouyun -p 15
+sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/lib/R/library /xiyouyun -p 15
