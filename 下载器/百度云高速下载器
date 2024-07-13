@@ -21,3 +21,5 @@ sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPC
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/local/lib/R/site-library /xiyouyun -p 15
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/lib/R/site-library /xiyouyun -p 15
 sudo /home/wangweitao/wangweitao/dow_load/BaiduPCS-Go-v3.9.1-linux-amd64/BaiduPCS-Go upload - /usr/lib/R/library /xiyouyun -p 15
+
+/home/wtwang2020/sofeware/BaiduPCS-Go-v3.9.5-linux-amd64/BaiduPCS-Go d /新所有文件/软件/依赖文件/ --saveto /home/wtwang2020/数据处理 -p 8
