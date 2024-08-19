@@ -1,3 +1,21 @@
+sudo vim /etc/systemd/system/vncserver@2.service
+[Unit]
+    Description=Start TigerVNC server at startup
+    After=syslog.target network.target
+
+    [Service]
+    User=root
+    PIDFile=/home/root/.vnc/%H:%i.pid
+    ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+    ExecStart=/usr/bin/vncserver -depth 24 -localhost no -geometry 1280x800 :%i
+    ExecStop=/usr/bin/vncserver -kill :%i
+
+    [Install]
+    WantedBy=multi-user.target
+sudo systemctl daemon-reload
+
+
+
 sudo systemctl stop vncserver@2
 sudo systemctl stop vncserver@1
 lsof -i :5901
