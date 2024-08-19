@@ -1,0 +1,9 @@
+sudo systemctl stop vncserver@2
+sudo systemctl stop vncserver@1
+lsof -i :5901
+lsof -i :5902
+kill -9 <PID>
+sudo systemctl start vncserver@2
+sudo systemctl enable vncserver@2
+redir :5901 :5902
+netstat -lnt
