@@ -25,3 +25,21 @@ sudo systemctl start vncserver@2
 sudo systemctl enable vncserver@2
 redir :5901 :5902
 netstat -lnt
+
+
+####################################################################################
+#!/bin/bash
+iptables -F
+iptables -X
+iptables -Z
+
+su - wtwang2020 -c "/usr/bin/vncserver -depth 24 -localhost no -geometry 1280x800 :2"
+su - wtwang2020 -c "/usr/bin/vncserver -depth 24 -localhost no -geometry 1280x800 :2"
+su - wtwang2020 -c "/usr/bin/vncserver -depth 24 -geometry 1280x800 :2"
+vncserver -kill :2
+
+#!/bin/bash
+redir :5901 :5902
+redir :5901 :5903
+ps aux | grep redir
+kill 1234
