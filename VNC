@@ -40,6 +40,12 @@ vncserver -kill :2
 
 #!/bin/bash
 redir :5901 :5902
-redir :5901 :5903
+ vncserver :5 -geometry 1280x800 -depth 24
+vncserver :6 -geometry 1280x800 -depth 24
+redir :5901 :5905
 ps aux | grep redir
 kill 1234
+sudo lsof -i :5901
+
+su - wtwang2020 -c "/usr/bin/vncserver -depth 24 -geometry 1280x800 :6"
+http://127.0.0.1:9090/ui/#/connections
