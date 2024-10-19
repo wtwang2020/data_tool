@@ -1,0 +1,5 @@
+for zip in *.zip; do
+    if [ "$zip" != "3384092.zip" ]; then
+        unzip "$zip" -d "${zip%.*}" && rm "$zip"
+    fi
+done
